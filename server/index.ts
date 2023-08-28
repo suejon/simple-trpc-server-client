@@ -1,38 +1,16 @@
 import { createHTTPServer } from '@trpc/server/adapters/standalone';
-import fs from 'fs';
 import { z } from 'zod';
+import { readUser, readUsers } from './db';
 import { publicProcedure, router } from "./trpc";
 
-type User = {
-  name: string;
-  age: number;
-}
-
-const readUser = (filePath: string): Promise<User> => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (error, data) => {
-      if (error) {
-        reject(error);
-      } else {
-        try {
-          const jsonData = JSON.parse(data);
-          const user: User = {
-            name: jsonData.name,
-            age: jsonData.age,
-          }
-          resolve(user);
-        } catch (parseError) {
-          reject(parseError);
-        }
-      }
-    });
-  });
-};
 
 const appRouter = router({
-  userList: publicProcedure.input(z.string()).query(async ({ input }) => {
-    const user = await readUser('./server/user.json');
+  getUsers: publicProcedure.query(async () => {
+    const user = await readUsers();
     return user;
+  }),
+  getUser: publicProcedure.input(z.string()).query(async ({ input }) => {
+    return await readUser(input);
   }),
   parrot: publicProcedure.input(z.string()).query(({ input }) => {
     return input

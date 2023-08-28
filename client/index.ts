@@ -11,7 +11,7 @@ const trpc = createTRPCProxyClient<AppRouter>({
 
 
 async function main() {
-	const payload = await trpc.userList.query("hello");
+	const payload = await trpc.getUser.query("64ec93d3e328cafc95dff9d7")
 	// const payload = await trpc.parrot.query("hi");
 	console.log(payload);
 }
