@@ -9,6 +9,11 @@ const trpc = createTRPCProxyClient<AppRouter>({
 	]
 })
 
-const payload = trpc.userList.query("hello");
 
-console.log(payload)
+async function main() {
+	const payload = await trpc.userList.query("hello");
+	// const payload = await trpc.parrot.query("hi");
+	console.log(payload);
+}
+
+main().catch(console.error);
